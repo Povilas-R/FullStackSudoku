@@ -2,7 +2,7 @@
 {
 	internal class ReadonlySudoku : Grid, ISudokuGrid
 	{
-		public ReadonlySudoku(short[,] cells, int seed) : base(cells)
+		public ReadonlySudoku(byte[,] cells, int seed) : base(cells)
 		{
 			Seed = seed;
 		}

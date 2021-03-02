@@ -1,6 +1,6 @@
 ﻿namespace SudokuGenerator.Data.Enum
 {
-	public enum SolvingMethodType : short
+	public enum SolvingMethodType : byte
 	{
 		BruteForce,
 	}

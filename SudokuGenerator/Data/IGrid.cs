@@ -4,11 +4,11 @@
 	{
 		int RowCount { get; }
 		int ColumnCount { get; }
-		short this[int row, int column] { get; }
+		byte this[int row, int column] { get; }
 
-		internal short[,] ToMatrix()
+		internal byte[,] ToMatrix()
 		{
-			var result = new short[RowCount, ColumnCount];
+			var result = new byte[RowCount, ColumnCount];
 			for (int row = 0; row < RowCount; row++)
 				for (int col = 0; col < ColumnCount; col++)
 					result[row, col] = this[row, col];

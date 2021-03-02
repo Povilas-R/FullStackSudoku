@@ -1,6 +1,6 @@
 ﻿namespace SudokuGenerator.Data.Enum
 {
-	public enum Digit : short
+	public enum Digit : byte
 	{
 		None = 0,
 		One = 1,
