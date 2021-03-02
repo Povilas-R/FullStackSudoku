@@ -14,7 +14,7 @@ namespace SudokuGenerator.Internal
 		public static ReadonlySudoku GenerateSolved() => GenerateSolved(Rand.Next());
 		public static ReadonlySudoku GenerateSolved(int seed)
 		{
-			short[,] cells = new short[9, 9];
+			byte[,] cells = new byte[9, 9];
 
 			// TODO: generate here
 

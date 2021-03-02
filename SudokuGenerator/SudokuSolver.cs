@@ -10,7 +10,7 @@ namespace SudokuGenerator
 	public static class SudokuSolver
 	{
 		public static IEnumerable<ISudokuGrid> Solve(ISudokuGrid sudokuGrid, int maxUniqueSolutions) => Solve(sudokuGrid.ToMatrix(), maxUniqueSolutions);
-		internal static IEnumerable<ISudokuGrid> Solve(short[,] cells, int maxUniqueSolutions)
+		internal static IEnumerable<ISudokuGrid> Solve(byte[,] cells, int maxUniqueSolutions)
 		{
 			throw new NotImplementedException();
 		}

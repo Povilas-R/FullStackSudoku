@@ -8,12 +8,12 @@ namespace SudokuGenerator.Data.Internal
 {
 	internal class Sudoku : ISudoku
 	{
-		private readonly short[,] Cells = new short[9, 9];
+		private readonly byte[,] Cells = new byte[9, 9];
 
 		public int? Seed { get; set; }
 		public int RowCount => 9;
 		public int ColumnCount => 9;
-		public short this[int row, int column]
+		public byte this[int row, int column]
 		{
 			get => Cells[row, column];
 			set => Cells[row, column] = value;
@@ -26,10 +26,10 @@ namespace SudokuGenerator.Data.Internal
 		{
 			if (digit < Digit.None || digit > Digit.Nine)
 				throw new ArgumentException(nameof(digit)); // TODO: better exception throwing
-			else if (Initial[row, column] != (short)Digit.None)
+			else if (Initial[row, column] != (byte)Digit.None)
 				throw new ArgumentException($"{nameof(row)}, {nameof(column)}"); // TODO: better exception throwing
 
-			Cells[row, column] = (short)digit;
+			Cells[row, column] = (byte)digit;
 		}
 		public void Reset()
 		{
@@ -45,20 +45,20 @@ namespace SudokuGenerator.Data.Internal
 				for (int col = 0; col < 9; col++)
 				{
 					// Skip initial cells
-					if (Initial[row, col] != (short)Digit.None)
+					if (Initial[row, col] != (byte)Digit.None)
 						continue;
 
-					short value = this[row, col];
+					byte value = this[row, col];
 					// Mark as invalid if the value is not available
-					if (value != (short)Digit.None && !getAvailableValues(row, col).Contains(value))
+					if (value != (byte)Digit.None && !getAvailableValues(row, col).Contains(value))
 						invalidCells.Add(new Cell(row, col, (Digit)value));
 				}
 			}
 			return invalidCells.ToArray();
 
-			HashSet<short> getAvailableValues(int cellRow, int cellColumn)
+			HashSet<byte> getAvailableValues(int cellRow, int cellColumn)
 			{
-				var values = new HashSet<short>(Enumerable.Range(1, 9).Select(x => (short)x));
+				var values = new HashSet<byte>(Enumerable.Range(1, 9).Select(x => (byte)x));
 				for (int row = 0; row < 9; row++)
 					for (int col = 0; col < 9; col++)
 						if (row != cellRow && col != cellColumn)
@@ -77,8 +77,8 @@ namespace SudokuGenerator.Data.Internal
 			{
 				for (int col = 0; col < 9; col++)
 				{
-					short initialDigit = Initial[row, col];
-					short guessDigit = this[row, col];
+					byte initialDigit = Initial[row, col];
+					byte guessDigit = this[row, col];
 					initialBuilder.Append(initialDigit == 0 ? "*" : initialDigit);
 					guessBuilder.Append(initialDigit > 0 ? "#" : guessDigit == 0 ? "-" : guessDigit);
 				}
@@ -104,7 +104,7 @@ namespace SudokuGenerator.Data.Internal
 			// Fill initial
 			for (int i = 0; i < parts[0].Length; i++)
 			{
-				short digit = (short)(parts[0][i] - '0');
+				byte digit = (byte)(parts[0][i] - '0');
 				if (digit >= 1 && digit <= 9)
 					result[i / 9, i % 9] = digit;
 			}
@@ -112,7 +112,7 @@ namespace SudokuGenerator.Data.Internal
 			// Fill guesses
 			for (int i = 0; i < parts[1].Length; i++)
 			{
-				short digit = (short)(parts[1][i] - '0');
+				byte digit = (byte)(parts[1][i] - '0');
 				if (digit >= 1 && digit <= 9)
 					result[i / 9, i % 9] = digit;
 			}
