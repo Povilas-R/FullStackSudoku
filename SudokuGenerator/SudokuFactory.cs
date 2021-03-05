@@ -10,9 +10,9 @@ namespace SudokuGenerator
 	public static class SudokuFactory
 	{
 		public static ISudokuGrid GenerateSolved(int seed)
-        {
+		{
 			return Generator.GenerateSolved(seed);
-        }
+		}
 
 		public static ISudoku Generate(SudokuDifficulty difficulty)
 		{
@@ -31,7 +31,7 @@ namespace SudokuGenerator
 				throw new ArgumentException($"{nameof(maxUniqueSolutions)} must be at least 0.");
 
 			var sudoku = Sudoku.FromString(input);
-			if (maxUniqueSolutions > 0) 
+			if (maxUniqueSolutions > 0)
 				sudoku.Solutions = SudokuSolver.Solve(sudoku, maxUniqueSolutions).ToArray();
 			return sudoku;
 		}
