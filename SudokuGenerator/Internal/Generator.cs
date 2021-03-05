@@ -20,7 +20,7 @@ namespace SudokuGenerator.Internal
 
 			// TODO: generate here
 			Console.WriteLine("test");
-			
+
 
 			return new ReadonlySudoku(cells, seed);
 		}
@@ -29,6 +29,31 @@ namespace SudokuGenerator.Internal
 		public static Sudoku GenerateUnsolved(int seed, SudokuDifficulty difficulty)
 		{
 			throw new NotImplementedException();
+		}
+
+		private static byte[,] GenerateSolvedRecursive(Random rand, byte[,] grid = null, int index = 0)
+		{
+			// Initial
+			if (grid == null)
+				grid = new byte[9, 9];
+
+			// Reached end
+			if (index == 81)
+				return grid;
+
+			int row = index / 9;
+			int col = index % 9;
+			foreach (byte value in GetPossibleValues(row, col, grid).OrderBy(x => rand.Next()))
+			{
+				var gridCopy = (byte[,])grid.Clone();
+				gridCopy[row, col] = value;
+				var resultGrid = GenerateSolvedRecursive(rand, gridCopy, index + 1);
+				// Reached end
+				if (resultGrid != null)
+					return resultGrid;
+			}
+			// Return null in case of no possible values
+			return null;
 		}
 
 		private static HashSet<int> GetPossibleValues(int targetRow, int targetColumn, byte[,] grid)
