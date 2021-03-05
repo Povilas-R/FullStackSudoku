@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SudokuGenerator.Data.Enum;
 using SudokuGenerator.Data.Internal;
 
@@ -19,7 +20,7 @@ namespace SudokuGenerator.Internal
 
 			// TODO: generate here
 			Console.WriteLine("test");
-			
+
 
 			return new ReadonlySudoku(cells, seed);
 		}
