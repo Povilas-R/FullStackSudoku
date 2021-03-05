@@ -9,6 +9,11 @@ namespace SudokuGenerator
 {
 	public static class SudokuFactory
 	{
+		public static ISudokuGrid GenerateSolved(int seed)
+        {
+			return Generator.GenerateSolved(seed);
+        }
+
 		public static ISudoku Generate(SudokuDifficulty difficulty)
 		{
 			return Generator.GenerateUnsolved(difficulty);
