@@ -17,11 +17,46 @@ namespace SudokuGenerator.Internal
 		public static ReadonlySudoku GenerateSolved(int seed)
 		{
 			byte[,] cells = new byte[9, 9];
+			Random rand = new Random(seed);
+			var invalidPaths = new Dictionary<string, List<byte>>();
+			string currentPath = string.Empty;
 
-			// TODO: generate here
-			Console.WriteLine("test");
-			
+			for (int cell = 0; cell < 81; cell++)
+			{
+				int row = cell / 9;
+				int col = cell % 9;
+				var possibleValues = GetPossibleValues(row, col, cells);
+				// Remove invalid values for current path
+				if (invalidPaths.ContainsKey(currentPath))
+				{
+					var arrayOfValuesToRemove = invalidPaths[currentPath];
+					foreach (byte value in arrayOfValuesToRemove)
+					{
+						possibleValues.Remove(value);
+					}
+				}
 
+				// set a random possible value
+				if (possibleValues.Count > 0)
+				{
+					
+					cells[row, col] = possibleValues.ToArray()[rand.Next(possibleValues.Count)];
+					currentPath += cells[row, col].ToString();
+				}
+				// backtracks and updates invalid values
+				else
+				{
+					int previousCell = cell - 1;
+					int previousRow = previousCell / 9;
+					int previousCol = previousCell % 9;
+					currentPath = currentPath.Substring(0, currentPath.Length - 1);
+					if (!invalidPaths.ContainsKey(currentPath))
+						invalidPaths[currentPath] = new List<byte>();
+					invalidPaths[currentPath].Add(cells[previousRow, previousCol]);
+					cells[previousRow, previousCol] = 0;
+					cell -= 2;
+				}
+			}
 			return new ReadonlySudoku(cells, seed);
 		}
 
@@ -31,9 +66,9 @@ namespace SudokuGenerator.Internal
 			throw new NotImplementedException();
 		}
 
-		private static HashSet<int> GetPossibleValues(int targetRow, int targetColumn, byte[,] grid)
+		private static HashSet<byte> GetPossibleValues(int targetRow, int targetColumn, byte[,] grid)
 		{
-			var values = new HashSet<int>(Enumerable.Range(1, 9));
+			var values = new HashSet<byte>(Enumerable.Range(1, 9).Select(x => (byte)x));
 
 			// Row
 			for (int col = 0; col < 9; col++)
