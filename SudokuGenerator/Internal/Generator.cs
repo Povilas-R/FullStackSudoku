@@ -66,6 +66,31 @@ namespace SudokuGenerator.Internal
 			throw new NotImplementedException();
 		}
 
+		private static byte[,] GenerateSolvedRecursive(Random rand, byte[,] grid = null, int index = 0)
+		{
+			// Initial
+			if (grid == null)
+				grid = new byte[9, 9];
+
+			// Reached end
+			if (index == 81)
+				return grid;
+
+			int row = index / 9;
+			int col = index % 9;
+			foreach (byte value in GetPossibleValues(row, col, grid).OrderBy(x => rand.Next()))
+			{
+				var gridCopy = (byte[,])grid.Clone();
+				gridCopy[row, col] = value;
+				var resultGrid = GenerateSolvedRecursive(rand, gridCopy, index + 1);
+				// Reached end
+				if (resultGrid != null)
+					return resultGrid;
+			}
+			// Return null in case of no possible values
+			return null;
+		}
+
 		private static HashSet<byte> GetPossibleValues(int targetRow, int targetColumn, byte[,] grid)
 		{
 			var values = new HashSet<byte>(Enumerable.Range(1, 9).Select(x => (byte)x));
