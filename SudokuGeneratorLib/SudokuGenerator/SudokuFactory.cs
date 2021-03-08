@@ -9,16 +9,16 @@ namespace SudokuGenerator
 {
 	public static class SudokuFactory
 	{
-		public static ISudokuGrid GenerateSolved(int seed)
+		private static readonly Random Rand = new Random((int)DateTime.Now.Ticks);
+
+		public static ISudokuGrid GenerateSolved() => GenerateSolved(Rand.Next());
+		public static ISudokuGrid GenerateSolved(int seed) => GenerateSolved(GenerationAlgorithm.Backtracking, seed);
+		public static ISudokuGrid GenerateSolved(GenerationAlgorithm algorithm, int seed)
 		{
-			return Generator.GenerateSolved(seed);
+			return Generator.GenerateSolved(algorithm, seed);
 		}
 
-		public static ISudoku Generate(SudokuDifficulty difficulty)
-		{
-			return Generator.GenerateUnsolved(difficulty);
-		}
-
+		public static ISudoku Generate(SudokuDifficulty difficulty) => Generate(Rand.Next(), difficulty);
 		public static ISudoku Generate(int seed, SudokuDifficulty difficulty)
 		{
 			return Generator.GenerateUnsolved(seed, difficulty);
