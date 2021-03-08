@@ -4,12 +4,14 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SudokuGenerator;
 using SudokuGenerator.Data;
+using SudokuGenerator.Data.Enum;
 
 namespace SudokuGeneratorTests
 {
-	[TestClass]
-	public class SolvedGeneratorTests
+	public abstract class BaseSolvedGeneratorTests
 	{
+		protected virtual GenerationAlgorithm _algorithm { get; }
+
 		private readonly Dictionary<int, ISudokuGrid> GeneratedSolutions = new Dictionary<int, ISudokuGrid>();
 		/// <summary>
 		/// Gets generated sudoku from cache.
@@ -18,7 +20,7 @@ namespace SudokuGeneratorTests
 		private ISudokuGrid GetGeneratedSudoku(int seed)
 		{
 			if (!GeneratedSolutions.TryGetValue(seed, out ISudokuGrid grid))
-				GeneratedSolutions[seed] = grid = SudokuFactory.GenerateSolved(seed);
+				GeneratedSolutions[seed] = grid = SudokuFactory.GenerateSolved(_algorithm, seed);
 			return grid;
 		}
 
@@ -31,8 +33,8 @@ namespace SudokuGeneratorTests
 		[TestMethod]
 		public void GenerateSolved_CheckSameSeed()
 		{
-			var sudoku1 = SudokuFactory.GenerateSolved(0);
-			var sudoku2 = SudokuFactory.GenerateSolved(0);
+			var sudoku1 = SudokuFactory.GenerateSolved(_algorithm, 0);
+			var sudoku2 = SudokuFactory.GenerateSolved(_algorithm, 0);
 			for (int index = 0; index < 81; index++)
 			{
 				int row = index / 9;
