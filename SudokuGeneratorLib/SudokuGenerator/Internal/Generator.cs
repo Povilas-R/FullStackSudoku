@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SudokuGenerator.Data.Enum;
 using SudokuGenerator.Data.Internal;
+using System.Text;
 
 namespace SudokuGenerator.Internal
 {
@@ -16,48 +17,46 @@ namespace SudokuGenerator.Internal
 		public static ReadonlySudoku GenerateSolved() => GenerateSolved(Rand.Next());
 		public static ReadonlySudoku GenerateSolved(int seed)
 		{
-			byte[,] cells = new byte[9, 9];
-			Random rand = new Random(seed);
+			byte[,] grid = new byte[9, 9];
+			var rand = new Random(seed);
 			var invalidPaths = new Dictionary<string, List<byte>>();
-			string currentPath = string.Empty;
+			var currentPath = new StringBuilder(string.Empty, 82);
 
-			for (int cell = 0; cell < 81; cell++)
+			for (int index = 0; index < 81; index++)
 			{
-				int row = cell / 9;
-				int col = cell % 9;
-				var possibleValues = GetPossibleValues(row, col, cells);
+				int row = index / 9;
+				int col = index % 9;
+				var possibleValues = GetPossibleValues(row, col, grid);
 				// Remove invalid values for current path
-				if (invalidPaths.ContainsKey(currentPath))
+				if (invalidPaths.ContainsKey(currentPath.ToString()))
 				{
-					var arrayOfValuesToRemove = invalidPaths[currentPath];
-					foreach (byte value in arrayOfValuesToRemove)
+					foreach (byte value in invalidPaths[currentPath.ToString()])
 					{
 						possibleValues.Remove(value);
 					}
 				}
 
-				// set a random possible value
+				// Set a random possible value
 				if (possibleValues.Count > 0)
-				{
-					
-					cells[row, col] = possibleValues.ToArray()[rand.Next(possibleValues.Count)];
-					currentPath += cells[row, col].ToString();
+				{				
+					grid[row, col] = possibleValues.ToArray()[rand.Next(possibleValues.Count)];
+					currentPath.Append(grid[row, col]);
 				}
-				// backtracks and updates invalid values
+				// Backtracks and updates invalid values
 				else
 				{
-					int previousCell = cell - 1;
-					int previousRow = previousCell / 9;
-					int previousCol = previousCell % 9;
-					currentPath = currentPath.Substring(0, currentPath.Length - 1);
-					if (!invalidPaths.ContainsKey(currentPath))
-						invalidPaths[currentPath] = new List<byte>();
-					invalidPaths[currentPath].Add(cells[previousRow, previousCol]);
-					cells[previousRow, previousCol] = 0;
-					cell -= 2;
+					int previousIndex = index - 1;
+					int previousRow = previousIndex / 9;
+					int previousCol = previousIndex % 9;
+					currentPath = currentPath.Remove(currentPath.Length - 1, 1);
+					if (!invalidPaths.ContainsKey(currentPath.ToString()))
+						invalidPaths[currentPath.ToString()] = new List<byte>();
+					invalidPaths[currentPath.ToString()].Add(grid[previousRow, previousCol]);
+					grid[previousRow, previousCol] = 0;
+					index -= 2;
 				}
 			}
-			return new ReadonlySudoku(cells, seed);
+			return new ReadonlySudoku(grid, seed);
 		}
 
 		public static Sudoku GenerateUnsolved(SudokuDifficulty difficulty) => GenerateUnsolved(Rand.Next(), difficulty);
