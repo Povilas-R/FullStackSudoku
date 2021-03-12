@@ -27,7 +27,16 @@ namespace SudokuGeneratorTests
 		[TestMethod]
 		public void GenerateSolved_CheckSpecificSeed()
 		{
-			// TODO: check result against specific seed once solved solution generator is fully implemented
+			var validSudoku = SudokuGenerator.Original.SudokuFactory.GenerateSolved((SudokuGenerator.Original.Data.Enum.GenerationAlgorithm)_algorithm, 0);
+			var testSudoku = SudokuFactory.GenerateSolved(_algorithm, 0);
+			for (int index = 0; index < 81; index++)
+			{
+				int row = index / 9;
+				int col = index % 9;
+				byte value1 = validSudoku[row, col];
+				byte value2 = testSudoku[row, col];
+				Assert.AreEqual(value1, value2, "Generated sudoku doesn't match original.");
+			}
 		}
 
 		[TestMethod]
